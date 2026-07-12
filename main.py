@@ -38,11 +38,19 @@ async def root(request: Request):
 
 @app.get("/linux", response_class=PlainTextResponse)
 async def linux():
-    return "cat file_name.log | curl --data-binary @- http://127.0.0.1:8000/"
+    return "cat file | curl --data-binary @- http://originex.tech"
 
-@app.get("/windows", response_class=PlainTextResponse)
-async def windows():
-    return "(Get-Content file_name.log | Invoke-RestMethod -Uri 'http://127.0.0.1:8000/' -Method Post).Content"
+@app.get("/powershell", response_class=PlainTextResponse)
+async def powershell():
+    return '(Get-Content file | Invoke-WebRequest -Uri "http://originex.tech" -Method Post).Content'
+
+@app.get("/cmd", response_class=PlainTextResponse)
+async def cmd():
+    return 'curl --data-binary @file http://originex.tech'
+
+@app.get("/macos", response_class=PlainTextResponse)
+async def macos():
+    return 'cat file | curl --data-binary @- http://originex.tech'
 @app.get("/", response_class=PlainTextResponse)
 async def home(request: Request):
     try:
@@ -58,7 +66,7 @@ async def home(request: Request):
             html_content = markdown.markdown(md_content)
             full_html = html.format(html_content=html_content)
             return HTMLResponse(content=full_html)
-        return PlainTextResponse("Tutorial available in browser!!!")
+        return PlainTextResponse("Tutorial available in browser!!! If you from CLI you can use /powershell, /cmd, /linux, /macos")
     except FileNotFoundError:
         return PlainTextResponse("=== PasteME ===\nWelcome! (MAIN.md missing)")
 
