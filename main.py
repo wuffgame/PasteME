@@ -28,8 +28,11 @@ async def root(request: Request):
     if len(text) > 2 * 1024 * 1024:
         return "Error: Paste size limits exceeded (Max 2MB).\n"
     text_after = text.decode("utf-8", errors="ignore")
-    uuid = shortuuid.uuid()
-    short_uuid = uuid[:8]
+    while True:
+        uuid = shortuuid.uuid()
+        short_uuid = uuid[:8]
+        if not r.exists(short_uuid):
+            break
     if not text_after.strip():
         return Response(f"Error: You cannot submit an empty paste.", media_type="text/plain")
     r.set(short_uuid, text_after, ex=ttl)
