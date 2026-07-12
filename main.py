@@ -17,13 +17,17 @@ async def root(request: Request):
     text_after = text.decode("utf-8", errors="ignore")
     uuid = shortuuid.uuid()
     short_uuid = uuid[:8]
-    r.set(short_uuid, text_after)
+    r.set(short_uuid, text_after, ex=86400)
+    if not text_after.strip():
+        return Response(f"Error: You cannot submit an empty paste.", media_type="text/plain")
     return Response(f"http://127.0.0.1:8000/{short_uuid}", media_type="text/plain")
 
 @app.get("/{id}", response_class=PlainTextResponse)
 async def get_paste(id: str):
     try:
         text = r.get(id)
+        if text is None:
+            return Response("The paste has expired or never existed.", status_code=404, media_type="text/plain")
         return text
     except Exception as e:
         return f"Error: {e}"
