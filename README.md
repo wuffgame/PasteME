@@ -76,6 +76,8 @@ Since I currently do not have access to systems like Linux or macOS, the command
 
 ## For Server
 
+**Remember, the repository is configured to run on my server; replace all instances of `originex.tech` with `127.0.0.1` in `main.py`. And run everything on the local machine.**
+
 ### Requirements
 
 - Git
