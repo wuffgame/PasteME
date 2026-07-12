@@ -22,11 +22,11 @@ Since I currently do not have access to systems like Linux or macOS, the command
 
 1. The basic command:
 
-`(Get-Content file | Invoke-WebRequest -Uri "http://originex.tech" -Method Post).Content`
+`(Get-Content file | Invoke-WebRequest -Uri "https://originex.tech" -Method Post).Content`
 
 2. It can be extended by the expiration time:
 
-`(Get-Content file | Invoke-WebRequest -Uri "http://originex.tech" -Method Post -Headers @{"X-TTL"="300"}).Content`
+`(Get-Content file | Invoke-WebRequest -Uri "https://originex.tech" -Method Post -Headers @{"X-TTL"="300"}).Content`
 
 **Remember to replace the "file" field with your own file, and note that the max expiration time for the paste is 24 hours (86400 s).**
 
@@ -34,11 +34,11 @@ Since I currently do not have access to systems like Linux or macOS, the command
 
 1. The basic command:
 
-`curl --data-binary @file http://originex.tech`
+`curl --data-binary @file https://originex.tech`
 
 2. It can be extended by the expiration time:
 
-`curl -H "X-TTL: 300" --data-binary @file http://originex.tech`
+`curl -H "X-TTL: 300" --data-binary @file https://originex.tech`
 
 **Remember to replace the "file" field with your own file, and note that the max expiration time for the paste is 24 hours (86400 s).**
 
@@ -46,11 +46,11 @@ Since I currently do not have access to systems like Linux or macOS, the command
 
 1. The basic command:
 
-`cat file | curl --data-binary @- http://originex.tech`
+`cat file | curl --data-binary @- https://originex.tech`
 
 2. It can be extended by the expiration time:
 
-`cat file | curl -H "X-TTL: 300" --data-binary @- http://originex.tech`
+`cat file | curl -H "X-TTL: 300" --data-binary @- https://originex.tech`
 
 **Remember to replace the "file" field with your own file, and note that the maximum expiration time for the paste is 24 hours (86400 s).**
 
@@ -58,11 +58,11 @@ Since I currently do not have access to systems like Linux or macOS, the command
 
 1. The basic command:
 
-`cat file | curl --data-binary @- http://originex.tech`
+`cat file | curl --data-binary @- https://originex.tech`
 
 2. It can be extended by the expiration time:
 
-`cat file | curl -H "X-TTL: 300" --data-binary @- http://originex.tech`
+`cat file | curl -H "X-TTL: 300" --data-binary @- https://originex.tech`
 
 **Remember to replace the "file" field with your own file, and note that the maximum expiration time for the paste is 24 hours (86400 s).**
 
