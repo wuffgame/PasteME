@@ -72,3 +72,4 @@ async def get_paste(id: str):
     except Exception as e:
         return f"Error: {e}"
 
+
