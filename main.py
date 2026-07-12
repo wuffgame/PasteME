@@ -16,7 +16,7 @@ r = redis.Redis.from_url(str(redis_url), decode_responses=True)
 async def root(request: Request):
     ip = request.client.host
     if r.get(ip) == "True":
-        return "You have a cooldown"
+        return Response("Error: You have a active cooldown (30s).\n", status_code=429, media_type="text/plain")
     text = await request.body()
     ttl = request.headers.get("X-TTL", 86400)
     try:
@@ -34,7 +34,7 @@ async def root(request: Request):
         return Response(f"Error: You cannot submit an empty paste.", media_type="text/plain")
     r.set(short_uuid, text_after, ex=ttl)
     r.set(ip, "True", ex=30)
-    return Response(f"http://127.0.0.1:8000/{short_uuid}", media_type="text/plain")
+    return Response(f"Your paste link: http://127.0.0.1:8000/{short_uuid})", media_type="text/plain")
 
 @app.get("/linux", response_class=PlainTextResponse)
 async def linux():
