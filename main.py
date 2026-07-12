@@ -27,7 +27,17 @@ async def get_paste(id: str):
     try:
         text = r.get(id)
         if text is None:
-            return Response("The paste has expired or never existed.", status_code=404, media_type="text/plain")
+            return Response("The paste has expired or never existed.", status_code=404)
         return text
     except Exception as e:
         return f"Error: {e}"
+
+@app.get("/", response_class=PlainTextResponse)
+async def home():
+    return (
+        "===PasteME - originex.tech - CLI Pastebin===\n"
+        "How to use on Windows (PowerShell)?\n"
+        "Get-Content file_name.log | Invoke-RestMethod -Uri 'http://127.0.0.1:8000/' -Method Post\n\n"
+        "How to use on Linux (Bash)?\n"
+        "cat file_name.log | curl --data-binary @- http://127.0.0.1:8000/\n"
+    )
