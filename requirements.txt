@@ -4,3 +4,5 @@ fastapi[standard]
 shortuuid
 redis
 uvicorn
+markdown
+python-dotenv
