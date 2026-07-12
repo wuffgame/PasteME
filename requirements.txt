@@ -1,0 +1,5 @@
+
+fastapi
+shortuuid
+redis
+uvicorn
