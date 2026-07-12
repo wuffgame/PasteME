@@ -17,11 +17,27 @@ async def root(request: Request):
     text_after = text.decode("utf-8", errors="ignore")
     uuid = shortuuid.uuid()
     short_uuid = uuid[:8]
-    r.set(short_uuid, text_after, ex=86400)
     if not text_after.strip():
         return Response(f"Error: You cannot submit an empty paste.", media_type="text/plain")
+    r.set(short_uuid, text_after, ex=86400)
     return Response(f"http://127.0.0.1:8000/{short_uuid}", media_type="text/plain")
 
+@app.get("/linux", response_class=PlainTextResponse)
+async def linux():
+    return "cat file_name.log | curl --data-binary @- http://127.0.0.1:8000/"
+
+@app.get("/windows", response_class=PlainTextResponse)
+async def windows():
+    return "(Get-Content file_name.log | Invoke-RestMethod -Uri 'http://127.0.0.1:8000/' -Method Post).Content"
+@app.get("/", response_class=PlainTextResponse)
+async def home():
+    return (
+        "===PasteME - originex.tech - CLI Pastebin===\n"
+        "How to use on Windows (PowerShell)?\n"
+        "Get-Content file_name.log | Invoke-RestMethod -Uri 'http://127.0.0.1:8000/' -Method Post\n\n"
+        "How to use on Linux (Bash)?\n"
+        "cat file_name.log | curl --data-binary @- http://127.0.0.1:8000/\n"
+    )
 @app.get("/{id}", response_class=PlainTextResponse)
 async def get_paste(id: str):
     try:
@@ -32,12 +48,3 @@ async def get_paste(id: str):
     except Exception as e:
         return f"Error: {e}"
 
-@app.get("/", response_class=PlainTextResponse)
-async def home():
-    return (
-        "===PasteME - originex.tech - CLI Pastebin===\n"
-        "How to use on Windows (PowerShell)?\n"
-        "Get-Content file_name.log | Invoke-RestMethod -Uri 'http://127.0.0.1:8000/' -Method Post\n\n"
-        "How to use on Linux (Bash)?\n"
-        "cat file_name.log | curl --data-binary @- http://127.0.0.1:8000/\n"
-    )
