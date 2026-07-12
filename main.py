@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Request, Response
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, HTMLResponse
 import shortuuid
 import redis
 import os
+import markdown
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,6 +21,8 @@ async def root(request: Request):
     ttl = request.headers.get("X-TTL", 86400)
     try:
         ttl = int(ttl)
+        if ttl > 86400:
+            return "The maximum expiration time is 24 hours (86400s)."
     except ValueError:
         ttl = 86400
     if len(text) > 2 * 1024 * 1024:
@@ -41,16 +44,24 @@ async def linux():
 async def windows():
     return "(Get-Content file_name.log | Invoke-RestMethod -Uri 'http://127.0.0.1:8000/' -Method Post).Content"
 @app.get("/", response_class=PlainTextResponse)
-async def home():
-    #TODO linux command
-    return (
-        "===PasteME - originex.tech - CLI Pastebin===\n"
-        "How to use on Windows (PowerShell)?\n"
-        "Get-Content file_name.log | Invoke-RestMethod -Uri 'http://127.0.0.1:8000/' -Method Post\n"
-        'Or use "(Invoke-WebRequest -Uri "http://127.0.0.1:8000/windows" -Method Get).Content" in PowerShell to see command\n\n'
-        "How to use on Linux (Bash)?\n"
-        "cat file_name.log | curl --data-binary @- http://127.0.0.1:8000/\n"
-    )
+async def home(request: Request):
+    try:
+        with open("MAIN.md", "r", encoding="utf-8") as f:
+            md_content = f.read()
+
+        with open("index.html", "r") as file:
+            html = file.read()
+
+        user_agent = request.headers.get("user-agent", "").lower()
+
+        if any(browser in user_agent for browser in ["mozilla", "chrome", "safari", "edge", "opera"]):
+            html_content = markdown.markdown(md_content)
+            full_html = html.format(html_content=html_content)
+            return HTMLResponse(content=full_html)
+        return PlainTextResponse("Tutorial available in browser!!!")
+    except FileNotFoundError:
+        return PlainTextResponse("=== PasteME ===\nWelcome! (MAIN.md missing)")
+
 @app.get("/{id}", response_class=PlainTextResponse)
 async def get_paste(id: str):
     try:
