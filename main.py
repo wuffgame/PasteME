@@ -17,6 +17,11 @@ async def root(request: Request):
     if r.get(ip) == "True":
         return "You have a cooldown"
     text = await request.body()
+    ttl = request.headers.get("X-TTL", 86400)
+    try:
+        ttl = int(ttl)
+    except ValueError:
+        ttl = 86400
     if len(text) > 2 * 1024 * 1024:
         return "Error: Paste size limits exceeded (Max 2MB).\n"
     text_after = text.decode("utf-8", errors="ignore")
@@ -24,7 +29,7 @@ async def root(request: Request):
     short_uuid = uuid[:8]
     if not text_after.strip():
         return Response(f"Error: You cannot submit an empty paste.", media_type="text/plain")
-    r.set(short_uuid, text_after, ex=86400)
+    r.set(short_uuid, text_after, ex=ttl)
     r.set(ip, "True", ex=30)
     return Response(f"http://127.0.0.1:8000/{short_uuid}", media_type="text/plain")
 
