@@ -22,7 +22,7 @@ async def root(request: Request):
     try:
         ttl = int(ttl)
         if ttl > 86400:
-            return "The maximum expiration time is 24 hours (86400s)."
+            return "The maximum expiration time is 24 hours (86400s).\n"
     except ValueError:
         ttl = 86400
     if len(text) > 2 * 1024 * 1024:
@@ -34,26 +34,26 @@ async def root(request: Request):
         if not r.exists(short_uuid):
             break
     if not text_after.strip():
-        return Response(f"Error: You cannot submit an empty paste.", media_type="text/plain")
+        return Response(f"Error: You cannot submit an empty paste.\n", media_type="text/plain")
     r.set(short_uuid, text_after, ex=ttl)
     r.set(ip, "True", ex=30)
-    return Response(f"Your paste link: http://127.0.0.1:8000/{short_uuid})", media_type="text/plain")
+    return Response(f"Your paste link: http://127.0.0.1:8000/{short_uuid})\n", media_type="text/plain")
 
 @app.get("/linux", response_class=PlainTextResponse)
 async def linux():
-    return "cat file | curl --data-binary @- http://originex.tech"
+    return "cat file | curl --data-binary @- http://originex.tech\n"
 
 @app.get("/powershell", response_class=PlainTextResponse)
 async def powershell():
-    return '(Get-Content file | Invoke-WebRequest -Uri "http://originex.tech" -Method Post).Content'
+    return '(Get-Content file | Invoke-WebRequest -Uri "http://originex.tech" -Method Post).Content\n'
 
 @app.get("/cmd", response_class=PlainTextResponse)
 async def cmd():
-    return 'curl --data-binary @file http://originex.tech'
+    return 'curl --data-binary @file http://originex.tech\n'
 
 @app.get("/macos", response_class=PlainTextResponse)
 async def macos():
-    return 'cat file | curl --data-binary @- http://originex.tech'
+    return 'cat file | curl --data-binary @- http://originex.tech\n'
 @app.get("/", response_class=PlainTextResponse)
 async def home(request: Request):
     try:
@@ -69,16 +69,16 @@ async def home(request: Request):
             html_content = markdown.markdown(md_content)
             full_html = html.format(html_content=html_content)
             return HTMLResponse(content=full_html)
-        return PlainTextResponse("Tutorial available in browser!!! If you from CLI you can use /powershell, /cmd, /linux, /macos")
+        return PlainTextResponse("Tutorial available in browser!!! If you from CLI you can use /powershell, /cmd, /linux, /macos\n")
     except FileNotFoundError:
-        return PlainTextResponse("=== PasteME ===\nWelcome! (MAIN.md missing)")
+        return PlainTextResponse("=== PasteME ===\nWelcome! (MAIN.md missing)\n")
 
 @app.get("/{id}", response_class=PlainTextResponse)
 async def get_paste(id: str):
     try:
         text = r.get(id)
         if text is None:
-            return Response("The paste has expired or never existed.", status_code=404)
+            return Response("The paste has expired or never existed.\n", status_code=404)
         return text
     except Exception as e:
         return f"Error: {e}"
