@@ -31,10 +31,12 @@ async def windows():
     return "(Get-Content file_name.log | Invoke-RestMethod -Uri 'http://127.0.0.1:8000/' -Method Post).Content"
 @app.get("/", response_class=PlainTextResponse)
 async def home():
+    #TODO linux command
     return (
         "===PasteME - originex.tech - CLI Pastebin===\n"
         "How to use on Windows (PowerShell)?\n"
-        "Get-Content file_name.log | Invoke-RestMethod -Uri 'http://127.0.0.1:8000/' -Method Post\n\n"
+        "Get-Content file_name.log | Invoke-RestMethod -Uri 'http://127.0.0.1:8000/' -Method Post\n"
+        'Or use "(Invoke-WebRequest -Uri "http://127.0.0.1:8000/windows" -Method Get).Content" in PowerShell to see command\n\n'
         "How to use on Linux (Bash)?\n"
         "cat file_name.log | curl --data-binary @- http://127.0.0.1:8000/\n"
     )
