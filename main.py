@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
 redis_url = os.getenv("REDIS_URL")
 r = redis.Redis.from_url(str(redis_url), decode_responses=True)
 
