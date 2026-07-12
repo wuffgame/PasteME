@@ -78,4 +78,4 @@ Thanks HackClub/macondo for the motivation to work on projects from my list.
 
 ## License
 
-The project is licensed under the GNU GPL v3.
+The project is licensed under the GNU GPL v3. 
