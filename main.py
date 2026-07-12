@@ -18,8 +18,6 @@ async def root(request: Request):
     uuid = shortuuid.uuid()
     short_uuid = uuid[:8]
     r.set(short_uuid, text_after)
-    with open(f"paste/paste_{short_uuid}", "w") as f:
-        f.write(text_after)
     return Response(f"http://127.0.0.1:8000/{short_uuid}", media_type="text/plain")
 
 @app.get("/{id}", response_class=PlainTextResponse)
