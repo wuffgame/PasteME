@@ -22,11 +22,11 @@ Since I currently do not have access to systems like Linux or macOS, the command
 
 1. The basic command:
 
-`(Get-Content file | Invoke-WebRequest -Uri "https://originex.tech" -Method Post).Content`
+`Invoke-RestMethod -Uri "https://originex.tech" -Method Post -InFile "file" -ContentType "application/octet-stream"`
 
 2. It can be extended by the expiration time:
 
-`(Get-Content file | Invoke-WebRequest -Uri "https://originex.tech" -Method Post -Headers @{"X-TTL"="300"}).Content`
+`(Invoke-WebRequest -Uri "https://originex.tech" -Method Post -Headers @{"X-TTL"="300"} -InFile "file" -ContentType "application/octet-stream").Content`
 
 **Remember to replace the "file" field with your own file, and note that the max expiration time for the paste is 24 hours (86400 s).**
 
