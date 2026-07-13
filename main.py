@@ -14,7 +14,7 @@ r = redis.Redis.from_url(str(redis_url), decode_responses=True)
 
 @app.post("/")
 async def root(request: Request):
-    ip = request.client.host
+    ip = request.headers.get("X-Real-IP") or request.client.host
     if r.get(ip) == "True":
         return Response("Error: You have a active cooldown (30s).\n", status_code=429, media_type="text/plain")
     text = await request.body()
